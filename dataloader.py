@@ -17,7 +17,7 @@ def get_loader(batch_size, num_workers):
                                     transforms.CenterCrop((64,85)),
                                     transforms.Grayscale(),
                                     transforms.ToTensor(),
-                                    transforms.Normalize( mean, std )])
+                                    transforms.Normalize( [0.5], [0.25] )])
     # train_transform = torchvision.transforms.Compose([
     #     torchvision.transforms.RandomCrop(32, padding=4),
     #     torchvision.transforms.RandomHorizontalFlip(),
