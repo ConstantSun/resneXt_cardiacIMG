@@ -81,8 +81,8 @@ def parse_args():
         ('depth', args.depth),
         ('base_channels', args.base_channels),
         ('cardinality', args.cardinality),
-        ('input_shape', (1, 3, 32, 32)),
-        ('n_classes', 10),
+        ('input_shape', (1, 1, 64, 85)),
+        ('n_classes', 3),
     ])
 
     optim_config = OrderedDict([
@@ -97,7 +97,7 @@ def parse_args():
     ])
 
     data_config = OrderedDict([
-        ('dataset', 'CIFAR10'),
+        ('dataset', 'cardiac image'),
     ])
 
     run_config = OrderedDict([
