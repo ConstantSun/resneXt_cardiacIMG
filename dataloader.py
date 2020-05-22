@@ -7,8 +7,7 @@ import torch.utils.data
 
 import torchvision
 import torchvision.models
-import torchvision.transforms
-
+from torchvision import datasets, transforms
 
 def get_loader(batch_size, num_workers):
     mean = np.array([0.4914, 0.4822, 0.4465])
