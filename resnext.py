@@ -1,4 +1,3 @@
-# # coding: utf-8
 
 import torch
 import torch.nn as nn
@@ -21,7 +20,7 @@ class BottleneckBlock(nn.Module):
     def __init__(self, in_channels, out_channels, stride, cardinality):
         super(BottleneckBlock, self).__init__()
 
-        bottleneck_channels = cardinality * out_channels // self.expansion # 4*d-out//4
+        bottleneck_channels = cardinality * out_channels // self.expansion
 
         self.conv1 = nn.Conv2d(
             in_channels,
@@ -77,40 +76,32 @@ class Network(nn.Module):
     def __init__(self, config):
         super(Network, self).__init__()
 
-        input_shape = config['input_shape'] #  [1, 3, 32, 32]
-        n_classes = config['n_classes']       # i.g  10
+        input_shape = config['input_shape']
+        n_classes = config['n_classes']
 
-        base_channels = config['base_channels'] # 64
-        depth = config['depth']                 #29
-        self.cardinality = config['cardinality'] #4
+        base_channels = config['base_channels']
+        depth = config['depth']
+        self.cardinality = config['cardinality']
 
-        n_blocks_per_stage = (depth - 2) // 9  # (29-2)//9=3
+        n_blocks_per_stage = (depth - 2) // 9
         assert n_blocks_per_stage * 9 + 2 == depth
         block = BottleneckBlock
 
         n_channels = [
-            base_channels,                       #  64
-            base_channels * block.expansion,    #   4*64 = 256
-            base_channels * 2 * block.expansion, #  512
-            base_channels * 4 * block.expansion  # 1024
+            base_channels, base_channels * block.expansion,
+            base_channels * 2 * block.expansion,
+            base_channels * 4 * block.expansion
         ]
 
         self.conv = nn.Conv2d(
-            input_shape[1],     # 3
-            n_channels[0],      # 64
+            input_shape[1],
+            n_channels[0],
             kernel_size=3,
             stride=1,
             padding=1,
             bias=False)
-'''
-nn.Conv2d(in_channels, out_channels, kernel_size, 
-            stride=1, padding=0, dilation=1, groups=1, bias=True, padding_mode='zeros')
-'''
-
         self.bn = nn.BatchNorm2d(n_channels[0])
-'''
-torch.nn.BatchNorm2d(num_features, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-'''
+
         self.stage1 = self._make_stage(
             n_channels[0], n_channels[1], n_blocks_per_stage, stride=1)
         self.stage2 = self._make_stage(
@@ -163,4 +154,3 @@ torch.nn.BatchNorm2d(num_features, eps=1e-05, momentum=0.1, affine=True, track_r
         x = x.view(x.size(0), -1)
         x = self.fc(x)
         return x
-
